@@ -45,3 +45,13 @@ Les tests de performance pour le composant triangulators se concentreront sur le
  - Temps de traitement
  - Utilisation des ressources
 
+Les tests seront réalisés en variants les paramètres suivants :
+    - Taille du PointSet : Tester avec des PointSets de différentes tailles (ex: 10², 10³, 10⁴, 10⁵, 10⁶)
+    - Amplitude des coordonnées : Tester avec des PointSets dont les coordonnées des points varient dans différentes plages (ex: 0-100, 0-10,000, -1,000 à 1,000)
+    - Distribution des points : Tester avec des PointSets ayant différentes distributions de points (ex: uniformément répartis, regroupés en clusters, alignés le long d'une ligne)
+
+- Test sur la conversion depuis/vers le format interne/format binaire 
+- Test sur la triangulation
+
+Chaque test mesurera le temps de traitement et l'utilisation des ressources (CPU, mémoire) pour chaque combinaison de paramètres.
+
