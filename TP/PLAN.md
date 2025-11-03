@@ -99,6 +99,8 @@ Tests associés :
 
 Chaque test mesurera temps + ressources consommées.
 
+Des test de performances peuvent aussi être réalisés sur l'api en mesurant le temps de réponse pour différentes tailles de `PointSet`.
+
 ---
 
 ## 4. Qualité du code & couverture des tests
