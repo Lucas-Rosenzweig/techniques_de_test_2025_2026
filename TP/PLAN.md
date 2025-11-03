@@ -55,3 +55,11 @@ Les tests seront réalisés en variants les paramètres suivants :
 
 Chaque test mesurera le temps de traitement et l'utilisation des ressources (CPU, mémoire) pour chaque combinaison de paramètres.
 
+## 4. Qualité du code & couverture des tests
+La qualitée du code est assurée par ruff dans le fichier pyproject.toml
+La couverture est mesurée par coverage , avec un objectif de couverture de 100%
+
+On peux envisager l'ajout de Github Actions pour par exemple refuser un commit qui ne respecte pas les règles de qualité.
+Et un autre qui genère une documentation avec pdoc3 automatiquement à chaque commit sur la branche principale.
+
+
