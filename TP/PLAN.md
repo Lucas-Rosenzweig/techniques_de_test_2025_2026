@@ -1,74 +1,114 @@
-# Plan de test Triangulation
+# Plan de test – Triangulation
 
-Le but de projet est d'implémenter le composant de triangulation et de le tester de manière rigoureuse.
-Donc le plan de test suivant est proposé pour couvrir les différents aspects du composant triangulators unquement.
+Le but de projet est d'implémenter le composant de triangulation et de le tester de manière rigoureuse.  
+Donc le plan de test suivant est proposé pour couvrir les différents aspects du composant **triangulators** uniquement.
 
-## 1. Tests unitaires 
+---
 
-Les tests unitaires sur le composant triangulators vont être réalisés en mockant le PointSetManager
+## Sommaire
+1. [Tests unitaires](#1-tests-unitaires)  
+   1.1 [Tests API](#tests-api)  
+   1.2 [Tests fonctionnels](#tests-fonctionnels)  
+2. [Tests d'intégration](#2-tests-dintégration)  
+3. [Tests de performance](#3-tests-de-performance)  
+4. [Qualité du code & couverture des tests](#4-qualité-du-code--couverture-des-tests)
+
+---
+
+## 1. Tests unitaires
+
+Les tests unitaires sur le composant triangulators vont être réalisés en mockant le `PointSetManager`,  
 qui est le principal fournisseur de données pour le module de triangulation.
 
-Test coté api, on va vérifier que l'api répond correctement aux différents scénarios d'appel.:
-- Test API 200 : Si on envoie un PointSetId valide, que la communication avec le PointSetManager est réussie, et que l'algorithme de triangulation ne renvoie pas d'erreur alors , on doit recevoir Triangles au bon format.
-- Test API 400 : Si on envoie un PointSetId invalide (ex: format incorrect), on doit recevoir une erreur 400.
-- Test API 404 : Si on envoie un PointSetId valide mais que le PointSetManager ne trouve pas le PointSet correspondant, on doit recevoir une erreur 404.
-- Test API 500 : Si la communication avec le PointSetManager échoue (ex: timeout, erreur réseau), on doit recevoir une erreur 500.
-- Test API 503 : Si l'algorithme de triangulation rencontre une erreur interne (de type : exception non gérée etc...), on doit recevoir une erreur 503.
-Pour les tests api ci dessus , le mock du PointSetManager devra simuler les différents scénarios.
-Ces tests permettent de vérifier la partie "interface" du composant triangulators on est sur que les appels api sont correctement gérés selon les différents cas.
+### Tests API
 
+On va vérifier que l'API répond correctement aux différents scénarios d'appel :
 
-Ex: dans le premier test, le mock vas retourner un PointSet valide pour un PointSetId donné.
-A l'inverse dans le test 404, le mock vas simuler l'absence du PointSet correspondant.
-Et dans le test 500, le mock vas simuler une erreur de communication.
-Le point_set_manager.yml nous permet de mocker correctement ces différents scénarios.
+- **Test API 200** : Si on envoie un `PointSetId` valide, que la communication avec le `PointSetManager` est réussie, et que l'algorithme de triangulation ne renvoie pas d'erreur, alors on doit recevoir des triangles au bon format.
+- **Test API 400** : Si on envoie un `PointSetId` invalide (ex: format incorrect), on doit recevoir une erreur 400.
+- **Test API 404** : Si on envoie un `PointSetId` valide mais que le `PointSetManager` ne trouve pas le `PointSet` correspondant, on doit recevoir une erreur 404.
+- **Test API 500** : Si la communication avec le `PointSetManager` échoue (ex: timeout, erreur réseau), on doit recevoir une erreur 500.
+- **Test API 503** : Si l'algorithme de triangulation rencontre une erreur interne (ex: exception non gérée), on doit recevoir une erreur 503.
 
-- Tests "fonctionnel":  Test spécifique a l'implémentation de l'algorithme de triangulation sans passer par l'api.
-  Ces tests sont basés sur les cas "remarquables" suivants :
-  - Test de sérialisation/désérialisation : Vérifier que la conversion entre le format binaire et le format interne fonctionne correctement.
-  - Test avec un PointSet vide doit renvoyer 0 triangles / ou une erreur selon l'implémentation
-  - Test avec un PointSet contenant des points dupliqués : doit renvoyer 0 triangles / ou une erreur selon l'implémentation
-  - Test avec un PointSet avec 1 point : doit renvoyer 0 triangles / ou une erreur selon l'implémentation
-  - Test avec un PointSet avec 2 points : doit renvoyer 0 triangles / ou une erreur selon l'implémentation
-  - Test avec un PointSet avec des points alignés : doit renvoyer 0 triangles / ou une erreur selon l'implémentation
-  - Test avec un PointSet avec 3 points : Renvoie un seul triangle
-  - Test avec un PointSet avec 4 points formant un carré : Renvoie 2 triangles
-  - Test avec un PointSet quelconque ou nous connaissons le résultat attendu
-  - Test de vérification de la validité des triangles générés : S'assurer que les triangles générés respectent les propriétés géométriques attendues (ex: pas de chevauchement, sommets valides, etc.)
-Ces tests permettent de vérifier que l'algorithme de triangulation fonctionne correctement pour des cas particuliers et gère les edeges cases.
+Pour les tests API ci-dessus, le mock du `PointSetManager` devra simuler les différents scénarios.  
+Ces tests permettent de vérifier la partie *interface* du composant triangulators : on est sûr que les appels API sont correctement gérés selon les différents cas.
 
+> Exemple :  
+> Dans le premier test, le mock va retourner un `PointSet` valide pour un `PointSetId` donné.  
+> Dans le test 404, il simule l’absence de `PointSet`.  
+> Dans le test 500, il simule une erreur de communication.  
+> Le fichier `point_set_manager.yml` permettra de mocker ces différents scénarios.
+
+### Tests fonctionnels
+
+Tests spécifiques à l'implémentation de l'algorithme de triangulation sans passer par l'API.  
+Ces tests sont basés sur les cas remarquables suivants :
+
+- Test de sérialisation/désérialisation : Vérifier que la conversion entre le format binaire et le format interne fonctionne correctement.
+- Test avec un `PointSet` vide → 0 triangles (ou erreur selon l'implémentation).
+- Test avec des points dupliqués → 0 triangles (ou erreur selon l'implémentation).
+- Test avec 1 point → 0 triangles (ou erreur selon l'implémentation)..
+- Test avec 2 points → 0 triangles (ou erreur selon l'implémentation)..
+- Test avec des points alignés → 0 triangles (ou erreur selon l'implémentation)..
+- Test avec 3 points → 1 triangle.
+- Test avec 4 points formant un carré → 2 triangles.
+- Test avec un `PointSet` quelconque dont le résultat attendu est connu.
+- Test de validité du format des triangles générés , doit respecter le format spécifié.
+Ces tests vérifient le bon fonctionnement de l'algorithme dans des cas particuliers et couvrent les edge cases.
+
+---
 
 ## 2. Tests d'intégration
-L'implémentation de tests d'intégration pour le composant triangulators est limitée par l'absence d'autres composants réels avec lesquels intégrer.
-Il n'y a donc pas de tests d'intégration possibles dans le cadre de ce projet.
-Cependant , en condition réelle, des tests d'intégration seraient réalisés avec les composants suivants :
-- PointSetManager : Vérifier que le composant triangulators peut récupérer correctement les PointSets
-- Système de stockage des résultats : Vérifier que les triangles générés sont correctement stockés et récupérables.
-- Interface utilisateur : Vérifier que les utilisateurs peuvent demander une triangulation et recevoir les résultats correctement.
-Cependant nous pouvous réaliser des tests d'intégration limités en utilisant des mocks pour simuler les interactions avec ces composants.
-- Test d'intégration avec un mock du PointSetManager : Vérifier que le composant triangulators peut récupérer un PointSet simulé et effectuer la triangulation correctement.
-Cela permet un test du workflow complet de la triangulation en intégrant la récupération des données et le traitement.
+
+L’implémentation de tests d’intégration pour le composant triangulators est limitée par l’absence d’autres composants réels avec lesquels il pourrait s’intégrer.  
+Il n’y a donc **pas de tests d’intégration possibles** dans le cadre de ce projet.
+
+Cependant, en condition réelle, des tests d'intégration seraient réalisés avec les composants suivants :
+
+- **PointSetManager** : vérifier la récupération des `PointSet`.
+- **Système de stockage des résultats** : vérifier que les triangles générés sont bien stockés et accessibles.
+- **Interface utilisateur** : vérifier que les utilisateurs peuvent demander une triangulation et recevoir les résultats.
+
+⚠️ On peut tout de même réaliser des tests d'intégration limités à l'aide de *mocks* :
+
+- **Test d'intégration avec un mock du PointSetManager** : vérifier que le composant triangulators peut récupérer un `PointSet` simulé et effectuer la triangulation.
+
+Ce test permet de valider le workflow complet : récupération des données + traitement.
+
+---
 
 ## 3. Tests de performance
-Les tests de performance pour le composant triangulators se concentreront sur les aspects suivants :
- - Temps de traitement
- - Utilisation des ressources
 
-Les tests seront réalisés en variants les paramètres suivants :
-    - Taille du PointSet : Tester avec des PointSets de différentes tailles (ex: 10², 10³, 10⁴, 10⁵, 10⁶)
-    - Amplitude des coordonnées : Tester avec des PointSets dont les coordonnées des points varient dans différentes plages (ex: 0-100, 0-10,000, -1,000 à 1,000)
-    - Distribution des points : Tester avec des PointSets ayant différentes distributions de points (ex: uniformément répartis, regroupés en clusters, alignés le long d'une ligne)
+Les tests de performance pour le composant triangulators se concentreront sur :
 
-- Test sur la conversion depuis/vers le format interne/format binaire 
-- Test sur la triangulation
+- le temps de traitement
+- l’utilisation des ressources (CPU, mémoire)
 
-Chaque test mesurera le temps de traitement et l'utilisation des ressources (CPU, mémoire) pour chaque combinaison de paramètres.
+Paramètres testés :
+
+- Taille du `PointSet` : 10², 10³, 10⁴, 10⁵, 10⁶
+- Amplitude des coordonnées :  
+  Ex : 0–100, 0–10 000, −1000 à 1000
+- Distribution des points :  
+  Répartition uniforme, clusters, alignement linéaire
+
+Tests associés :
+
+- Temps de conversion (format interne ↔ format binaire)
+- Temps de triangulation
+
+Chaque test mesurera temps + ressources consommées.
+
+---
 
 ## 4. Qualité du code & couverture des tests
-La qualitée du code est assurée par ruff dans le fichier pyproject.toml
-La couverture est mesurée par coverage , avec un objectif de couverture de 100%
 
-On peux envisager l'ajout de Github Actions pour par exemple refuser un commit qui ne respecte pas les règles de qualité.
-Et un autre qui genère une documentation avec pdoc3 automatiquement à chaque commit sur la branche principale.
+- Qualité du code assurée par **ruff** (config dans `pyproject.toml`)
+- Couverture mesurée par **coverage**  
+  🎯 Objectif : **100%**
 
+Possibilité d’ajouter :
+
+- **GitHub Actions** pour refuser un commit non conforme
+- Génération automatique de la documentation avec `pdoc3` à chaque commit sur `main`
 
