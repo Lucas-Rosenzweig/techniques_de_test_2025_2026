@@ -1,9 +1,8 @@
 #Unit test for the triangulator module
 import pytest
-
-from pointset import PointSet
-from pointset import Point
-from triangles import Triangles
+from classes.pointset import PointSet
+from classes.pointset import Point
+from classes.triangles import Triangles
 
 class TestTriangulate:
     def test_triangulate_must_return_triangles(self):

@@ -1,6 +1,6 @@
 from typing import List
-from pointset import Point
-from pointset import PointSet
+from classes.pointset import Point
+from classes.pointset import PointSet
 
 class Triangle:
     def __init__(self, p1: Point, p2: Point, p3: Point) -> None:

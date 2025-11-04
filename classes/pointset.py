@@ -30,7 +30,7 @@ class PointSet:
                 self.point_count == other.point_count and
                 self.points == other.points)
 
-#Methode outside of class to create a PointSet from api data
+#Methode outside of classes to create a PointSet from api data
 def create_pointset_from_api_data() -> PointSet:
     # Placeholder for creating a PointSet from API data
     return None
