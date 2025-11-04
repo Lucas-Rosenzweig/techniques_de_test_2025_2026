@@ -9,7 +9,7 @@ Vous devez compléter cette partie pour qu'on puisse vous identifier.
 
 Nom : Rosenzweig  
 Prénom : Lucas  
-Groupe de TP : MI ILSEN Alternance  
+Groupe de TP : M1 ILSEN Alternance  
 
 ## Remarques particulières
 
