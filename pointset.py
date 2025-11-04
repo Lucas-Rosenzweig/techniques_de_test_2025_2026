@@ -22,7 +22,7 @@ class PointSet:
     def triangulate(self) -> "Triangles":
         # Placeholder triangulation logic
         from triangles import Triangles # Local import to avoid circular dependency
-        return Triangles(self, 0, [])
+        return None
 
     #Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
@@ -33,4 +33,4 @@ class PointSet:
 #Methode outside of class to create a PointSet from api data
 def create_pointset_from_api_data() -> PointSet:
     # Placeholder for creating a PointSet from API data
-    return PointSet(0, [])
+    return None
