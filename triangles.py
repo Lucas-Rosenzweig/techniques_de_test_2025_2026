@@ -1,6 +1,6 @@
 from typing import List
-from PointSet import Point
-from PointSet import PointSet
+from pointset import Point
+from pointset import PointSet
 
 class Triangle:
     def __init__(self, p1: Point, p2: Point, p3: Point) -> None:
@@ -11,9 +11,16 @@ class Triangle:
 class Triangles:
     def __init__(self, pointset: PointSet, triangle_count:int, triangles: List[Triangle]) -> None:
         self.pointset = pointset
-        self.trianglesNumber = triangle_count
+        self.triangle_count = triangle_count
         self.triangles = triangles
 
     def push_to_api(self) -> None:
         # Placeholder for pushing triangles to an API
         pass
+
+    #Overriding equality operator for testing purposes
+    def __eq__(self, other) -> bool:
+        return (isinstance(other, Triangles) and
+                self.pointset == other.pointset and
+                self.triangle_count == other.triangle_count and
+                self.triangles == other.triangles)
