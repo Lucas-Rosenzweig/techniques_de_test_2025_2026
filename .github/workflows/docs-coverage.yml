@@ -1,0 +1,70 @@
+name: Documentation et Coverage
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r dev_requirements.txt
+        pip install pdoc coverage pytest-cov
+
+    - name: Generate coverage report
+      run: |
+        coverage run -m pytest
+        coverage html
+
+    - name: Generate documentation
+      run: |
+        pdoc --html --output-dir docs Triangulator classes
+
+    - name: Create index page
+      run: |
+        mkdir -p public
+        cat > public/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Documentation & Coverage</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                a { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; text-decoration: none; border-radius: 5px; }
+                a:hover { background: #e0e0e0; }
+                h1 { color: #333; }
+            </style>
+        </head>
+        <body>
+            <h1>📚 Documentation & Coverage Reports</h1>
+            <a href="./htmlcov/index.html">📊 Coverage Report</a>
+            <a href="./docs/Triangulator.html">📖 API Documentation</a>
+        </body>
+        </html>
+        EOF
+        cp -r htmlcov public/
+        cp -r docs public/
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
