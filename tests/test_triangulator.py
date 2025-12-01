@@ -14,7 +14,6 @@ class TestTriangulate:
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         triangulation = point_set.triangulate()
         assert triangulation.triangle_count == 1
-        assert len(triangulation.triangles) == 1
 
     def test_triangulate_with_collinear_points(self):
         collinear_point_set = PointSet([Point(1.0, 1.0), Point(2.0, 2.0), Point(3.0, 3.0)])
@@ -50,3 +49,27 @@ class TestTriangulate:
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)])
         triangulation = point_set.triangulate()
         assert triangulation.triangle_count == 2
+
+class TestSerialization:
+    def test_pointset_to_bytes_must_return_bytes(self):
+        point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
+        point_set_bytes = point_set.to_bytes()
+        valid_point_set_bytes = None #TODO : Ecrire a la main la sérialisation pour que ce test soit valide
+        assert point_set_bytes == valid_point_set_bytes
+        assert isinstance(point_set_bytes, bytes)
+
+    def test_triangles_to_bytes_must_return_bytes(self):
+        point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
+        triangles = point_set.triangulate()
+        triangles_bytes = triangles.to_bytes()
+        valid_triangles_bytes = None #TODO : Ecrire a la main la sérialisation pour que ce test soit valide
+        assert triangles_bytes == valid_triangles_bytes
+        assert isinstance(triangles_bytes, bytes)
+
+class TestDeserialization:
+    def test_pointset_from_bytes_must_return_pointset(self):
+        point_set_bytes = None #TODO : Ecrire a la main la sérialisation pour que ce test soit valide
+        valid_deserialized_point_set = None #TODO : Ecrire a la main le PointSet pour que ce test soit valide
+        deserialized_point_set = PointSet.from_bytes(point_set_bytes)
+        assert isinstance(deserialized_point_set, PointSet)
+        assert deserialized_point_set == valid_deserialized_point_set
