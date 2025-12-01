@@ -45,14 +45,6 @@ class PerformanceMonitor:
         self.metrics.cpu_time = end_cpu - self.start_cpu
         self.metrics.memory_usage = peak
 
-        print(f"\n{'-' * 60}")
-        print(f"  [PERF RESULT]")
-        print(f"  > Time:   {self.metrics.execution_time:.6f} s")
-        print(f"  > CPU Time:    {self.metrics.cpu_time:.6f} s")
-        print(f"  > Peak Memory: {self.metrics.memory_usage / 1024:.2f} KB "
-              f"({self.metrics.memory_usage / (1024 * 1024):.2f} MB)")
-        print(f"{'-' * 60}")
-
 
 @pytest.fixture
 def performance_tracker():
@@ -76,6 +68,14 @@ def test_triangulation_performance(size, amplitude, distribution, performance_tr
     with performance_tracker as metrics:
         pointset.triangulate()
 
+    print(f"\n{'-' * 60}")
+    print(f" Triangulation Performance test- Size: {size}, Amplitude: {amplitude}, Distribution: {distribution}")
+    print(f"  > Time:   {metrics.execution_time:.6f} s")
+    print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
+    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(f"{'-' * 60}")
+
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
 
@@ -88,6 +88,14 @@ def test_pointset_to_bytes_performance(size, amplitude, performance_tracker):
     # ACTION (Mesurée)
     with performance_tracker as metrics:
         pointset.to_bytes()
+
+    print(f"\n{'-' * 60}")
+    print(f" Poinset to bytes Performance test- Size: {size}, Amplitude: {amplitude}")
+    print(f"  > Time:   {metrics.execution_time:.6f} s")
+    print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
+    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
@@ -103,6 +111,14 @@ def test_pointset_from_bytes_performance(size, amplitude, performance_tracker):
     with performance_tracker as metrics:
         PointSet.from_bytes(pointset_bytes)
 
+    print(f"\n{'-' * 60}")
+    print(f" PointSetFromBytes Performance test- Size: {size}, Amplitude: {amplitude}")
+    print(f"  > Time:   {metrics.execution_time:.6f} s")
+    print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
+    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(f"{'-' * 60}")
+
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
 
@@ -116,6 +132,14 @@ def test_triangles_to_bytes_performance(size, amplitude, performance_tracker):
     # ACTION (Mesurée)
     with performance_tracker as metrics:
         triangles.to_bytes()
+
+    print(f"\n{'-' * 60}")
+    print(f" Triangles to bytes Performance test- Size: {size}, Amplitude: {amplitude}")
+    print(f"  > Time:   {metrics.execution_time:.6f} s")
+    print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
+    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
