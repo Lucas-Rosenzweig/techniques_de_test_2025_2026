@@ -1,3 +1,7 @@
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["tests"]
+
 [tool.ruff.lint]
 select = [
     "D",
@@ -7,4 +11,11 @@ select = [
     "B",
     "SIM",
     "I",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
 ]
