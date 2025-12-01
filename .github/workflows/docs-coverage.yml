@@ -34,6 +34,7 @@ jobs:
         # CORRECTION 3 : On force pdoc3 (compatible avec vos commandes makefile)
         # On n'installe PAS pytest-cov car vous ne l'utilisez pas (vous utilisez coverage run)
         pip install pdoc3 coverage pytest
+        pip install pdoc3 coverage pytest flask
 
     - name: Generate coverage report
       run: |
