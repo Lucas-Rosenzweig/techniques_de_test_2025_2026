@@ -5,7 +5,6 @@ from urllib.error import HTTPError
 import pytest
 from classes.pointset import PointSet
 from classes.pointset import Point
-from classes.triangles import Triangles
 from Triangulator import app as flask_app
 
 #Helper pour avoir un PointSetValide
