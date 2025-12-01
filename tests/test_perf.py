@@ -1,6 +1,7 @@
 import time
 import tracemalloc
 from dataclasses import dataclass
+
 import pytest
 
 from classes.pointset import PointSet
@@ -14,10 +15,10 @@ class PerformanceMetrics:
     cpu_time: float = 0.0
     memory_usage: int = 0
 
-#Mesure de performance via un contexte 'with'
+
+# Mesure de performance via un contexte 'with'
 class PerformanceMonitor:
-    """
-    Classe qui gère le démarrage et l'arrêt du chronomètre
+    """Classe qui gère le démarrage et l'arrêt du chronomètre
     et de la surveillance mémoire via le mot clé 'with'.
     """
 
@@ -51,6 +52,7 @@ def performance_tracker():
     """Renvoie une instance du moniteur pour l'utiliser avec 'with'."""
     return PerformanceMonitor()
 
+
 SIZES = [10, 100, 1000, 10000]  # 100000 peut être long, à tester
 AMPLITUDES = [(0, 10), (0, 100), (0, 1000)]
 AMPLITUDES_IDS = [f"{min}/{max}" for (min, max) in AMPLITUDES]
@@ -69,15 +71,20 @@ def test_triangulation_performance(size, amplitude, distribution, performance_tr
         pointset.triangulate()
 
     print(f"\n{'-' * 60}")
-    print(f" Triangulation Performance test- Size: {size}, Amplitude: {amplitude}, Distribution: {distribution}")
+    print(
+        f" Triangulation Performance test- Size: {size}, Amplitude: {amplitude}, Distribution: {distribution}"
+    )
     print(f"  > Time:   {metrics.execution_time:.6f} s")
     print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
-    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
-          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(
+        f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+        f"({metrics.memory_usage / (1024 * 1024):.2f} MB)"
+    )
     print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
+
 
 @pytest.mark.parametrize("size", SIZES)
 @pytest.mark.parametrize("amplitude", AMPLITUDES)
@@ -93,12 +100,15 @@ def test_pointset_to_bytes_performance(size, amplitude, performance_tracker):
     print(f" Poinset to bytes Performance test- Size: {size}, Amplitude: {amplitude}")
     print(f"  > Time:   {metrics.execution_time:.6f} s")
     print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
-    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
-          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(
+        f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+        f"({metrics.memory_usage / (1024 * 1024):.2f} MB)"
+    )
     print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
+
 
 @pytest.mark.parametrize("size", SIZES)
 @pytest.mark.parametrize("amplitude", AMPLITUDES)
@@ -115,12 +125,15 @@ def test_pointset_from_bytes_performance(size, amplitude, performance_tracker):
     print(f" PointSetFromBytes Performance test- Size: {size}, Amplitude: {amplitude}")
     print(f"  > Time:   {metrics.execution_time:.6f} s")
     print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
-    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
-          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(
+        f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+        f"({metrics.memory_usage / (1024 * 1024):.2f} MB)"
+    )
     print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance
     # assert metrics.execution_time < (size * 0.01)
+
 
 @pytest.mark.parametrize("size", SIZES)
 @pytest.mark.parametrize("amplitude", AMPLITUDES)
@@ -137,8 +150,10 @@ def test_triangles_to_bytes_performance(size, amplitude, performance_tracker):
     print(f" Triangles to bytes Performance test- Size: {size}, Amplitude: {amplitude}")
     print(f"  > Time:   {metrics.execution_time:.6f} s")
     print(f"  > CPU Time:    {metrics.cpu_time:.6f} s")
-    print(f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
-          f"({metrics.memory_usage / (1024 * 1024):.2f} MB)")
+    print(
+        f"  > Peak Memory: {metrics.memory_usage / 1024:.2f} KB "
+        f"({metrics.memory_usage / (1024 * 1024):.2f} MB)"
+    )
     print(f"{'-' * 60}")
 
     # Eventuellement, on peut ajouter des assertions sur les métriques pour passer ou non le test de performance

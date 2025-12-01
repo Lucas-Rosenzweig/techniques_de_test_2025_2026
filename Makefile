@@ -15,3 +15,8 @@ coverage:
 	-coverage run -m pytest > /dev/null 2>&1
 	coverage report
 	coverage html
+
+lint:
+	@echo "Analyse statique du code avec ruff"
+	-ruff check . --fix
+	ruff format .

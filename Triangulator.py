@@ -1,10 +1,11 @@
 from flask import Flask
+
 app = Flask(__name__)
+
 
 @app.route("/triangulation/<string:pointSetId>", methods=["GET"])
 def triangulation(pointSetId: str):
     return "OK", 200
-
 
 
 if __name__ == "__main__":
