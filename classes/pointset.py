@@ -22,7 +22,7 @@ class PointSet:
     @classmethod
     def from_bytes(cls, data: bytes) -> "PointSet":
         #Placeholder pour la méthode qui vas convertir nos bytes en PointSet
-        return None
+        pass
 
     def to_bytes(self) -> bytes:
         #Placeholder pour la méthode qui vas convertir notre PointSet en bytes
