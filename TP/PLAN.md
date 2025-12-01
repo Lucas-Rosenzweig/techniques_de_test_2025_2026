@@ -27,8 +27,8 @@ On va vérifier que l'API répond correctement aux différents scénarios d'appe
 - **Test API 200** : Si on envoie un `PointSetId` valide, que la communication avec le `PointSetManager` est réussie, et que l'algorithme de triangulation ne renvoie pas d'erreur, alors on doit recevoir des triangles au bon format.
 - **Test API 400** : Si on envoie un `PointSetId` invalide (ex: format incorrect), on doit recevoir une erreur 400.
 - **Test API 404** : Si on envoie un `PointSetId` valide mais que le `PointSetManager` ne trouve pas le `PointSet` correspondant, on doit recevoir une erreur 404.
-- **Test API 500** : Si la communication avec le `PointSetManager` échoue (ex: timeout, erreur réseau), on doit recevoir une erreur 500.
-- **Test API 503** : Si l'algorithme de triangulation rencontre une erreur interne (ex: exception non gérée), on doit recevoir une erreur 503.
+- **Test API 500** : Si l'algorithme de triangulation rencontre une erreur interne (ex: exception non gérée), on doit recevoir une erreur 503.
+- **Test API 503** : Si la communication avec le `PointSetManager` échoue (ex: timeout, erreur réseau), on doit recevoir une erreur 500.
 
 Pour les tests API ci-dessus, le mock du `PointSetManager` devra simuler les différents scénarios.  
 Ces tests permettent de vérifier la partie *interface* du composant triangulators : on est sûr que les appels API sont correctement gérés selon les différents cas.
