@@ -2,7 +2,7 @@ from flask import Flask
 app = Flask(__name__)
 
 @app.route("/triangulation/<string:pointSetId>", methods=["GET"])
-def home():
+def triangulation(pointSetId: str):
     return "OK", 200
 
 

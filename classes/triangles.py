@@ -14,13 +14,13 @@ class Triangles:
         self.triangle_count = triangle_count
         self.triangles = triangles
 
-    def push_to_api(self) -> None:
-        # Placeholder for pushing triangles to an API
-        pass
-
     #Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
         return (isinstance(other, Triangles) and
                 self.pointset == other.pointset and
                 self.triangle_count == other.triangle_count and
                 self.triangles == other.triangles)
+
+    def to_bytes(self) -> bytes:
+        #Placeholder pour la méthode qui vas convertir notre Triangles en bytes
+        pass

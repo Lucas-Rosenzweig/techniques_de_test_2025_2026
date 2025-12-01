@@ -15,22 +15,25 @@ class Point:
 
 
 class PointSet:
-    def __init__(self, point_count : int, points: List[Point]) -> None:
-        self.point_count = point_count
+    def __init__(self, points: List[Point]) -> None:
         self.points = points
+        self.point_count = len(points)
+
+    @classmethod
+    def from_bytes(cls, data: bytes) -> "PointSet":
+        #Placeholder pour la méthode qui vas convertir nos bytes en PointSet
+        return None
+
+    def to_bytes(self) -> bytes:
+        #Placeholder pour la méthode qui vas convertir notre PointSet en bytes
+        pass
 
     def triangulate(self) -> "Triangles":
-        # Placeholder triangulation logic
-        from triangles import Triangles # Local import to avoid circular dependency
-        return None
+        #Placeholder pour la méthode qui vas trianguler notre PointSet
+        pass
 
     #Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
         return (isinstance(other, PointSet) and
                 self.point_count == other.point_count and
                 self.points == other.points)
-
-#Methode outside of classes to create a PointSet from api data
-def create_pointset_from_api_data() -> PointSet:
-    # Placeholder for creating a PointSet from API data
-    return None
