@@ -9,7 +9,7 @@ from classes.triangles import Triangles
 from Triangulator import app as flask_app
 
 #Helper pour avoir un PointSetValide
-def get_valid_pointSet() -> PointSet:
+def get_valid_pointset() -> PointSet:
     return PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
 
 #Mock le chemin pour urlopen de urllib afin d'éviter les appels réseau réels
@@ -23,10 +23,9 @@ class TestTriangulatorApi:
         with flask_app.test_client() as client:
             yield client
 
-        # --- Test API 200 : Cas Nominal (Success) ---
     def test_api_200_triangulation_ok(self, client):
         #Préparation des données du mock :
-        valid_point_set = get_valid_pointSet()
+        valid_point_set = get_valid_pointset()
         valid_point_set_bytes = valid_point_set.to_bytes()
         expected_triangles = valid_point_set.triangulate()
 
@@ -70,7 +69,7 @@ class TestTriangulatorApi:
 
     def test_api_500_triangulation_algorithm_error(self, client):
         valid_uuid = "123e4567-e89b-12d3-a456-426614174000"
-        valid_point_set = get_valid_pointSet()
+        valid_point_set = get_valid_pointset()
         valid_point_set_bytes = valid_point_set.to_bytes()
 
         # Mock du call API réussi

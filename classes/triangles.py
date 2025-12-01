@@ -9,10 +9,10 @@ class Triangle:
         self.p3 = p3
 
 class Triangles:
-    def __init__(self, pointset: PointSet, triangle_count:int, triangles: List[Triangle]) -> None:
+    def __init__(self, pointset: PointSet, triangles: List[Triangle]) -> None:
         self.pointset = pointset
-        self.triangle_count = triangle_count
         self.triangles = triangles
+        self.triangle_count = len(triangles)
 
     #Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
