@@ -29,8 +29,13 @@ class PointSet:
         pass
 
     def triangulate(self) -> "Triangles":
-        # Placeholder pour la méthode qui vas trianguler notre PointSet
-        pass
+        from services import BowerWatsonService
+        from classes.triangles import Triangles
+
+        super_triangles = BowerWatsonService.super_triangle(self.points)
+        triangulation = Triangles(self, []) # Initialisation vide des triangles
+        triangulation.add(super_triangles) # Ajout du super-triangle dans la triangulation
+        return triangulation
 
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
