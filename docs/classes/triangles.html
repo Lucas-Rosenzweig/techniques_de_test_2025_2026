@@ -59,13 +59,48 @@ el.replaceWith(d);
     def __init__(self, p1: Point, p2: Point, p3: Point) -&gt; None:
         self.p1 = p1
         self.p2 = p2
-        self.p3 = p3</code></pre>
+        self.p3 = p3
+
+    # Overriding equality operator for testing purposes
+    def __eq__(self, other) -&gt; bool:
+        return (
+            isinstance(other, Triangle)
+            and self.p1 == other.p1
+            and self.p2 == other.p2
+            and self.p3 == other.p3
+        )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="classes.triangles.TriangleIndex"><code class="flex name class">
+<span>class <span class="ident">TriangleIndex</span></span>
+<span>(</span><span>i1: int, i2: int, i3: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TriangleIndex:
+    def __init__(self, i1: int, i2: int, i3: int) -&gt; None:
+        self.i1 = i1
+        self.i2 = i2
+        self.i3 = i3
+
+    # Overriding equality operator for testing purposes
+    def __eq__(self, other) -&gt; bool:
+        return (
+            isinstance(other, TriangleIndex)
+            and self.i1 == other.i1
+            and self.i2 == other.i2
+            and self.i3 == other.i3
+        )</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
 <dt id="classes.triangles.Triangles"><code class="flex name class">
 <span>class <span class="ident">Triangles</span></span>
-<span>(</span><span>pointset: <a title="classes.pointset.PointSet" href="pointset.html#classes.pointset.PointSet">PointSet</a>,<br>triangles: list[<a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a>])</span>
+<span>(</span><span>pointset: <a title="classes.pointset.PointSet" href="pointset.html#classes.pointset.PointSet">PointSet</a>,<br>triangles_index: list[<a title="classes.triangles.TriangleIndex" href="#classes.triangles.TriangleIndex">TriangleIndex</a>])</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -73,10 +108,21 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Triangles:
-    def __init__(self, pointset: PointSet, triangles: list[Triangle]) -&gt; None:
+    &#34;&#34;&#34;
+    Représente un ensemble de triangles dont les sommets sont des points d&#39;un PointSet.
+
+    Représentation binaire:
+    - Partie 1: PointSet (sommets)
+      * 4 bytes: nombre de points (unsigned long)
+      * Pour chaque point: 8 bytes (4 bytes float X + 4 bytes float Y)
+    - Partie 2: Triangles
+      * 4 bytes: nombre de triangles (unsigned long)
+      * Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)
+    &#34;&#34;&#34;
+    def __init__(self, pointset: PointSet, triangles_index: list[TriangleIndex]) -&gt; None:
         self.pointset = pointset
-        self.triangles = triangles
-        self.triangle_count = len(triangles)
+        self.triangles = triangles_index
+        self.triangle_count = len(triangles_index)
 
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -&gt; bool:
@@ -91,7 +137,14 @@ el.replaceWith(d);
         # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
         pass</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Représente un ensemble de triangles dont les sommets sont des points d'un PointSet.</p>
+<p>Représentation binaire:
+- Partie 1: PointSet (sommets)
+* 4 bytes: nombre de points (unsigned long)
+* Pour chaque point: 8 bytes (4 bytes float X + 4 bytes float Y)
+- Partie 2: Triangles
+* 4 bytes: nombre de triangles (unsigned long)
+* Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="classes.triangles.Triangles.to_bytes"><code class="name flex">
@@ -127,6 +180,9 @@ el.replaceWith(d);
 <ul>
 <li>
 <h4><code><a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a></code></h4>
+</li>
+<li>
+<h4><code><a title="classes.triangles.TriangleIndex" href="#classes.triangles.TriangleIndex">TriangleIndex</a></code></h4>
 </li>
 <li>
 <h4><code><a title="classes.triangles.Triangles" href="#classes.triangles.Triangles">Triangles</a></code></h4>
