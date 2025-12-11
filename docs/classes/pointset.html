@@ -90,8 +90,13 @@ el.replaceWith(d);
         pass
 
     def triangulate(self) -&gt; &#34;Triangles&#34;:
-        # Placeholder pour la méthode qui vas trianguler notre PointSet
-        pass
+        from services import BowerWatsonService
+        from classes.triangles import Triangles
+
+        super_triangles = BowerWatsonService.super_triangle(self.points)
+        triangulation = Triangles(self, []) # Initialisation vide des triangles
+        triangulation.add(super_triangles) # Ajout du super-triangle dans la triangulation
+        return triangulation
 
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -&gt; bool:
@@ -136,8 +141,13 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def triangulate(self) -&gt; &#34;Triangles&#34;:
-    # Placeholder pour la méthode qui vas trianguler notre PointSet
-    pass</code></pre>
+    from services import BowerWatsonService
+    from classes.triangles import Triangles
+
+    super_triangles = BowerWatsonService.super_triangle(self.points)
+    triangulation = Triangles(self, []) # Initialisation vide des triangles
+    triangulation.add(super_triangles) # Ajout du super-triangle dans la triangulation
+    return triangulation</code></pre>
 </details>
 <div class="desc"></div>
 </dd>

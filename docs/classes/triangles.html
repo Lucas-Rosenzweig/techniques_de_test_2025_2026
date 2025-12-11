@@ -100,7 +100,7 @@ el.replaceWith(d);
 </dd>
 <dt id="classes.triangles.Triangles"><code class="flex name class">
 <span>class <span class="ident">Triangles</span></span>
-<span>(</span><span>pointset: <a title="classes.pointset.PointSet" href="pointset.html#classes.pointset.PointSet">PointSet</a>,<br>triangles_index: list[<a title="classes.triangles.TriangleIndex" href="#classes.triangles.TriangleIndex">TriangleIndex</a>])</span>
+<span>(</span><span>pointset: <a title="classes.pointset.PointSet" href="pointset.html#classes.pointset.PointSet">PointSet</a>,<br>triangles: list[<a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a>])</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -111,6 +111,9 @@ el.replaceWith(d);
     &#34;&#34;&#34;
     Représente un ensemble de triangles dont les sommets sont des points d&#39;un PointSet.
 
+    En interne, stocke des objets Triangle (avec des Points) pour faciliter l&#39;algorithme
+    de triangulation (notamment pour le super-triangle qui contient des points hors du PointSet).
+
     Représentation binaire:
     - Partie 1: PointSet (sommets)
       * 4 bytes: nombre de points (unsigned long)
@@ -119,10 +122,10 @@ el.replaceWith(d);
       * 4 bytes: nombre de triangles (unsigned long)
       * Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)
     &#34;&#34;&#34;
-    def __init__(self, pointset: PointSet, triangles_index: list[TriangleIndex]) -&gt; None:
+    def __init__(self, pointset: PointSet, triangles: list[Triangle]) -&gt; None:
         self.pointset = pointset
-        self.triangles = triangles_index
-        self.triangle_count = len(triangles_index)
+        self.triangles = triangles
+        self.triangle_count = len(triangles)
 
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -&gt; bool:
@@ -133,11 +136,19 @@ el.replaceWith(d);
             and self.triangles == other.triangles
         )
 
+    def add(self,triangle : Triangle) -&gt; None:
+        self.triangles.append(triangle)
+        self.triangle_count += 1
+
     def to_bytes(self) -&gt; bytes:
         # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
+        # Lors de la sérialisation, on convertira les Triangle (Points) en indices
+        # en cherchant chaque point dans self.pointset.points
         pass</code></pre>
 </details>
 <div class="desc"><p>Représente un ensemble de triangles dont les sommets sont des points d'un PointSet.</p>
+<p>En interne, stocke des objets Triangle (avec des Points) pour faciliter l'algorithme
+de triangulation (notamment pour le super-triangle qui contient des points hors du PointSet).</p>
 <p>Représentation binaire:
 - Partie 1: PointSet (sommets)
 * 4 bytes: nombre de points (unsigned long)
@@ -147,6 +158,20 @@ el.replaceWith(d);
 * Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)</p></div>
 <h3>Methods</h3>
 <dl>
+<dt id="classes.triangles.Triangles.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self,<br>triangle: <a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a>) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self,triangle : Triangle) -&gt; None:
+    self.triangles.append(triangle)
+    self.triangle_count += 1</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
 <dt id="classes.triangles.Triangles.to_bytes"><code class="name flex">
 <span>def <span class="ident">to_bytes</span></span>(<span>self) ‑> bytes</span>
 </code></dt>
@@ -157,6 +182,8 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">def to_bytes(self) -&gt; bytes:
     # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
+    # Lors de la sérialisation, on convertira les Triangle (Points) en indices
+    # en cherchant chaque point dans self.pointset.points
     pass</code></pre>
 </details>
 <div class="desc"></div>
@@ -187,6 +214,7 @@ el.replaceWith(d);
 <li>
 <h4><code><a title="classes.triangles.Triangles" href="#classes.triangles.Triangles">Triangles</a></code></h4>
 <ul class="">
+<li><code><a title="classes.triangles.Triangles.add" href="#classes.triangles.Triangles.add">add</a></code></li>
 <li><code><a title="classes.triangles.Triangles.to_bytes" href="#classes.triangles.Triangles.to_bytes">to_bytes</a></code></li>
 </ul>
 </li>
