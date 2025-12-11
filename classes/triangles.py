@@ -7,12 +7,46 @@ class Triangle:
         self.p2 = p2
         self.p3 = p3
 
+    # Overriding equality operator for testing purposes
+    def __eq__(self, other) -> bool:
+        return (
+            isinstance(other, Triangle)
+            and self.p1 == other.p1
+            and self.p2 == other.p2
+            and self.p3 == other.p3
+        )
+
+class TriangleIndex:
+    def __init__(self, i1: int, i2: int, i3: int) -> None:
+        self.i1 = i1
+        self.i2 = i2
+        self.i3 = i3
+
+    # Overriding equality operator for testing purposes
+    def __eq__(self, other) -> bool:
+        return (
+            isinstance(other, TriangleIndex)
+            and self.i1 == other.i1
+            and self.i2 == other.i2
+            and self.i3 == other.i3
+        )
 
 class Triangles:
-    def __init__(self, pointset: PointSet, triangles: list[Triangle]) -> None:
+    """
+    Représente un ensemble de triangles dont les sommets sont des points d'un PointSet.
+
+    Représentation binaire:
+    - Partie 1: PointSet (sommets)
+      * 4 bytes: nombre de points (unsigned long)
+      * Pour chaque point: 8 bytes (4 bytes float X + 4 bytes float Y)
+    - Partie 2: Triangles
+      * 4 bytes: nombre de triangles (unsigned long)
+      * Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)
+    """
+    def __init__(self, pointset: PointSet, triangles_index: list[TriangleIndex]) -> None:
         self.pointset = pointset
-        self.triangles = triangles
-        self.triangle_count = len(triangles)
+        self.triangles = triangles_index
+        self.triangle_count = len(triangles_index)
 
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
