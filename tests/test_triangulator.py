@@ -17,7 +17,7 @@ class TestTriangulate:
         triangulation = point_set.triangulate()
         assert triangulation.triangle_count == 1
 
-    def test_triangulate_with_collinear_points(self):
+    def test_triangulate_with_only_collinear_points(self):
         collinear_point_set = PointSet(
             [Point(1.0, 1.0), Point(2.0, 2.0), Point(3.0, 3.0)]
         )
@@ -53,11 +53,6 @@ class TestTriangulate:
             ValueError, match="Cannot triangulate a PointSet with less than 3 points"
         ):
             point_set.triangulate()
-
-    def test_triangulate_with_three_points(self):
-        point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(0.0, 1.0)])
-        triangulation = point_set.triangulate()
-        assert triangulation.triangle_count == 1
 
     def test_triangulate_with_square_points(self):
         point_set = PointSet(

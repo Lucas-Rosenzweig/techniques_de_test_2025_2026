@@ -7,6 +7,39 @@ class Triangle:
         self.p2 = p2
         self.p3 = p3
 
+        #Calcul du cercle circonscrit pour la triangulation de Bowyer-Watson
+        self.edges = [(p1, p2), (p2, p3), (p3, p1)]
+        self.circumcenter = None
+        self.circumradius = 0
+        self.calculate_circumcircle()
+
+
+    def calculate_circumcircle(self) -> None:
+        """Calcule le centre et le rayon du cercle circonscrit au triangle."""
+        ax, ay = self.p1.x, self.p1.y
+        bx, by = self.p2.x, self.p2.y
+        cx, cy = self.p3.x, self.p3.y
+        d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
+
+        #Cas de points colinéaires pas de cercle circonscrit défini
+        if abs(d) < 1e-10:
+            self.circumcenter = Point(float('inf'), float('inf'))
+            self.circumradius = float('inf')
+            return
+
+        # Calcul des coordonnées du centre du cercle circonscrit avec la formule du déterminant
+        ux = ((ax ** 2 + ay ** 2) * (by - cy) + (bx ** 2 + by ** 2) * (cy - ay) + (cx ** 2 + cy ** 2) * (ay - by)) / d
+        uy = ((ax ** 2 + ay ** 2) * (cx - bx) + (bx ** 2 + by ** 2) * (ax - cx) + (cx ** 2 + cy ** 2) * (bx - ax)) / d
+
+        self.circumcenter = Point(ux, uy)
+        self.circumradius = self.circumcenter.distance_to(self.p1)
+
+    def is_point_in_circumcircle(self, point: Point) -> bool:
+        """Vérifie si un point est à l'intérieur du cercle circonscrit du triangle."""
+        if self.circumradius == float('inf'): return False  # Pas de cercle circonscrit défini pour les points colinéaires
+        distance = self.circumcenter.distance_to(point)     #Distance entre le Point a vérifier et le centre du cercle circonscrit
+        return distance < self.circumradius                 #Si la distance est plus grande que le rayon, le point est en dehors du cercle circonscrit
+
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -> bool:
         return (
@@ -16,27 +49,10 @@ class Triangle:
             and self.p3 == other.p3
         )
 
-class TriangleIndex:
-    def __init__(self, i1: int, i2: int, i3: int) -> None:
-        self.i1 = i1
-        self.i2 = i2
-        self.i3 = i3
-
-    # Overriding equality operator for testing purposes
-    def __eq__(self, other) -> bool:
-        return (
-            isinstance(other, TriangleIndex)
-            and self.i1 == other.i1
-            and self.i2 == other.i2
-            and self.i3 == other.i3
-        )
 
 class Triangles:
     """
     Représente un ensemble de triangles dont les sommets sont des points d'un PointSet.
-
-    En interne, stocke des objets Triangle (avec des Points) pour faciliter l'algorithme
-    de triangulation (notamment pour le super-triangle qui contient des points hors du PointSet).
 
     Représentation binaire:
     - Partie 1: PointSet (sommets)
@@ -59,10 +75,6 @@ class Triangles:
             and self.triangle_count == other.triangle_count
             and self.triangles == other.triangles
         )
-
-    def add(self,triangle : Triangle) -> None:
-        self.triangles.append(triangle)
-        self.triangle_count += 1
 
     def to_bytes(self) -> bytes:
         # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
