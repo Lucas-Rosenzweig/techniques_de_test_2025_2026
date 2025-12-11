@@ -61,6 +61,39 @@ el.replaceWith(d);
         self.p2 = p2
         self.p3 = p3
 
+        #Calcul du cercle circonscrit pour la triangulation de Bowyer-Watson
+        self.edges = [(p1, p2), (p2, p3), (p3, p1)]
+        self.circumcenter = None
+        self.circumradius = 0
+        self.calculate_circumcircle()
+
+
+    def calculate_circumcircle(self) -&gt; None:
+        &#34;&#34;&#34;Calcule le centre et le rayon du cercle circonscrit au triangle.&#34;&#34;&#34;
+        ax, ay = self.p1.x, self.p1.y
+        bx, by = self.p2.x, self.p2.y
+        cx, cy = self.p3.x, self.p3.y
+        d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
+
+        #Cas de points colinéaires pas de cercle circonscrit défini
+        if abs(d) &lt; 1e-10:
+            self.circumcenter = Point(float(&#39;inf&#39;), float(&#39;inf&#39;))
+            self.circumradius = float(&#39;inf&#39;)
+            return
+
+        # Calcul des coordonnées du centre du cercle circonscrit avec la formule du déterminant
+        ux = ((ax ** 2 + ay ** 2) * (by - cy) + (bx ** 2 + by ** 2) * (cy - ay) + (cx ** 2 + cy ** 2) * (ay - by)) / d
+        uy = ((ax ** 2 + ay ** 2) * (cx - bx) + (bx ** 2 + by ** 2) * (ax - cx) + (cx ** 2 + cy ** 2) * (bx - ax)) / d
+
+        self.circumcenter = Point(ux, uy)
+        self.circumradius = self.circumcenter.distance_to(self.p1)
+
+    def is_point_in_circumcircle(self, point: Point) -&gt; bool:
+        &#34;&#34;&#34;Vérifie si un point est à l&#39;intérieur du cercle circonscrit du triangle.&#34;&#34;&#34;
+        if self.circumradius == float(&#39;inf&#39;): return False  # Pas de cercle circonscrit défini pour les points colinéaires
+        distance = self.circumcenter.distance_to(point)     #Distance entre le Point a vérifier et le centre du cercle circonscrit
+        return distance &lt; self.circumradius                 #Si la distance est plus grande que le rayon, le point est en dehors du cercle circonscrit
+
     # Overriding equality operator for testing purposes
     def __eq__(self, other) -&gt; bool:
         return (
@@ -71,32 +104,55 @@ el.replaceWith(d);
         )</code></pre>
 </details>
 <div class="desc"></div>
-</dd>
-<dt id="classes.triangles.TriangleIndex"><code class="flex name class">
-<span>class <span class="ident">TriangleIndex</span></span>
-<span>(</span><span>i1: int, i2: int, i3: int)</span>
+<h3>Methods</h3>
+<dl>
+<dt id="classes.triangles.Triangle.calculate_circumcircle"><code class="name flex">
+<span>def <span class="ident">calculate_circumcircle</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TriangleIndex:
-    def __init__(self, i1: int, i2: int, i3: int) -&gt; None:
-        self.i1 = i1
-        self.i2 = i2
-        self.i3 = i3
+<pre><code class="python">def calculate_circumcircle(self) -&gt; None:
+    &#34;&#34;&#34;Calcule le centre et le rayon du cercle circonscrit au triangle.&#34;&#34;&#34;
+    ax, ay = self.p1.x, self.p1.y
+    bx, by = self.p2.x, self.p2.y
+    cx, cy = self.p3.x, self.p3.y
+    d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
 
-    # Overriding equality operator for testing purposes
-    def __eq__(self, other) -&gt; bool:
-        return (
-            isinstance(other, TriangleIndex)
-            and self.i1 == other.i1
-            and self.i2 == other.i2
-            and self.i3 == other.i3
-        )</code></pre>
+    #Cas de points colinéaires pas de cercle circonscrit défini
+    if abs(d) &lt; 1e-10:
+        self.circumcenter = Point(float(&#39;inf&#39;), float(&#39;inf&#39;))
+        self.circumradius = float(&#39;inf&#39;)
+        return
+
+    # Calcul des coordonnées du centre du cercle circonscrit avec la formule du déterminant
+    ux = ((ax ** 2 + ay ** 2) * (by - cy) + (bx ** 2 + by ** 2) * (cy - ay) + (cx ** 2 + cy ** 2) * (ay - by)) / d
+    uy = ((ax ** 2 + ay ** 2) * (cx - bx) + (bx ** 2 + by ** 2) * (ax - cx) + (cx ** 2 + cy ** 2) * (bx - ax)) / d
+
+    self.circumcenter = Point(ux, uy)
+    self.circumradius = self.circumcenter.distance_to(self.p1)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Calcule le centre et le rayon du cercle circonscrit au triangle.</p></div>
+</dd>
+<dt id="classes.triangles.Triangle.is_point_in_circumcircle"><code class="name flex">
+<span>def <span class="ident">is_point_in_circumcircle</span></span>(<span>self,<br>point: <a title="classes.pointset.Point" href="pointset.html#classes.pointset.Point">Point</a>) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_point_in_circumcircle(self, point: Point) -&gt; bool:
+    &#34;&#34;&#34;Vérifie si un point est à l&#39;intérieur du cercle circonscrit du triangle.&#34;&#34;&#34;
+    if self.circumradius == float(&#39;inf&#39;): return False  # Pas de cercle circonscrit défini pour les points colinéaires
+    distance = self.circumcenter.distance_to(point)     #Distance entre le Point a vérifier et le centre du cercle circonscrit
+    return distance &lt; self.circumradius                 #Si la distance est plus grande que le rayon, le point est en dehors du cercle circonscrit</code></pre>
+</details>
+<div class="desc"><p>Vérifie si un point est à l'intérieur du cercle circonscrit du triangle.</p></div>
+</dd>
+</dl>
 </dd>
 <dt id="classes.triangles.Triangles"><code class="flex name class">
 <span>class <span class="ident">Triangles</span></span>
@@ -110,9 +166,6 @@ el.replaceWith(d);
 <pre><code class="python">class Triangles:
     &#34;&#34;&#34;
     Représente un ensemble de triangles dont les sommets sont des points d&#39;un PointSet.
-
-    En interne, stocke des objets Triangle (avec des Points) pour faciliter l&#39;algorithme
-    de triangulation (notamment pour le super-triangle qui contient des points hors du PointSet).
 
     Représentation binaire:
     - Partie 1: PointSet (sommets)
@@ -136,10 +189,6 @@ el.replaceWith(d);
             and self.triangles == other.triangles
         )
 
-    def add(self,triangle : Triangle) -&gt; None:
-        self.triangles.append(triangle)
-        self.triangle_count += 1
-
     def to_bytes(self) -&gt; bytes:
         # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
         # Lors de la sérialisation, on convertira les Triangle (Points) en indices
@@ -147,8 +196,6 @@ el.replaceWith(d);
         pass</code></pre>
 </details>
 <div class="desc"><p>Représente un ensemble de triangles dont les sommets sont des points d'un PointSet.</p>
-<p>En interne, stocke des objets Triangle (avec des Points) pour faciliter l'algorithme
-de triangulation (notamment pour le super-triangle qui contient des points hors du PointSet).</p>
 <p>Représentation binaire:
 - Partie 1: PointSet (sommets)
 * 4 bytes: nombre de points (unsigned long)
@@ -158,20 +205,6 @@ de triangulation (notamment pour le super-triangle qui contient des points hors 
 * Pour chaque triangle: 12 bytes (3 x 4 bytes unsigned long = indices des 3 sommets)</p></div>
 <h3>Methods</h3>
 <dl>
-<dt id="classes.triangles.Triangles.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self,<br>triangle: <a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a>) ‑> None</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def add(self,triangle : Triangle) -&gt; None:
-    self.triangles.append(triangle)
-    self.triangle_count += 1</code></pre>
-</details>
-<div class="desc"></div>
-</dd>
 <dt id="classes.triangles.Triangles.to_bytes"><code class="name flex">
 <span>def <span class="ident">to_bytes</span></span>(<span>self) ‑> bytes</span>
 </code></dt>
@@ -207,14 +240,14 @@ de triangulation (notamment pour le super-triangle qui contient des points hors 
 <ul>
 <li>
 <h4><code><a title="classes.triangles.Triangle" href="#classes.triangles.Triangle">Triangle</a></code></h4>
-</li>
-<li>
-<h4><code><a title="classes.triangles.TriangleIndex" href="#classes.triangles.TriangleIndex">TriangleIndex</a></code></h4>
+<ul class="">
+<li><code><a title="classes.triangles.Triangle.calculate_circumcircle" href="#classes.triangles.Triangle.calculate_circumcircle">calculate_circumcircle</a></code></li>
+<li><code><a title="classes.triangles.Triangle.is_point_in_circumcircle" href="#classes.triangles.Triangle.is_point_in_circumcircle">is_point_in_circumcircle</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="classes.triangles.Triangles" href="#classes.triangles.Triangles">Triangles</a></code></h4>
 <ul class="">
-<li><code><a title="classes.triangles.Triangles.add" href="#classes.triangles.Triangles.add">add</a></code></li>
 <li><code><a title="classes.triangles.Triangles.to_bytes" href="#classes.triangles.Triangles.to_bytes">to_bytes</a></code></li>
 </ul>
 </li>
