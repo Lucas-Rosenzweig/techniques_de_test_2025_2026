@@ -12,7 +12,7 @@ perf_test:
 
 coverage:
 	@echo "Couverture du code"
-	-coverage run -m pytest > /dev/null 2>&1
+	-coverage run -m pytest --ignore=tests/test_perf.py tests/
 	coverage report
 	coverage html
 
