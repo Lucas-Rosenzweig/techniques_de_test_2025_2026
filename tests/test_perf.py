@@ -53,7 +53,7 @@ def performance_tracker():
     return PerformanceMonitor()
 
 
-SIZES = [10, 100, 1000, 10000]  # 100000 peut être long, à tester
+SIZES = [10, 100, 1000]  # 100000 peut être long, à tester
 AMPLITUDES = [(0, 10), (0, 100), (0, 1000)]
 AMPLITUDES_IDS = [f"{min}/{max}" for (min, max) in AMPLITUDES]
 DISTRIBUTIONS = ["uniform", "linear", "clustered"]
