@@ -1,4 +1,5 @@
 # Unit test for the triangulator module
+import struct
 import pytest
 
 from classes.pointset import Point, PointSet
@@ -26,7 +27,7 @@ class TestTriangulate:
             collinear_point_set.triangulate()
 
     def test_triangulate_with_void_point_set(self):
-        void_point_set = PointSet(0, [])
+        void_point_set = PointSet([])
         with pytest.raises(ValueError, match="Cannot triangulate an empty PointSet"):
             void_point_set.triangulate()
 
@@ -70,7 +71,13 @@ class TestSerialization:
     def test_pointset_to_bytes_must_return_bytes(self):
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         point_set_bytes = point_set.to_bytes()
-        valid_point_set_bytes = None  # TODO : Ecrire a la main la sérialisation pour que ce test soit valide
+        valid_point_set_bytes = struct.pack(
+            '<Lffffff',  # L = unsigned long, f = float (little-endian)
+            3,           # nombre de points
+            0.0, 0.0,    # point 1 (x, y)
+            1.0, 0.0,    # point 2 (x, y)
+            1.0, 1.0     # point 3 (x, y)
+        )
         assert point_set_bytes == valid_point_set_bytes
         assert isinstance(point_set_bytes, bytes)
 
@@ -78,17 +85,32 @@ class TestSerialization:
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         triangles = point_set.triangulate()
         triangles_bytes = triangles.to_bytes()
-        valid_triangles_bytes = None  # TODO : Ecrire a la main la sérialisation pour que ce test soit valide
+        valid_triangles_bytes = struct.pack(
+            '<LffffffLLLL',
+            3,        # nombre de points (unsigned long)
+            0.0, 0.0, # point 1
+            1.0, 0.0, # point 2
+            1.0, 1.0, # point 3
+            1,        # nombre de triangles (unsigned long)
+            0, 1, 2   # indices des 3 sommets du triangle (unsigned long chacun)
+        )
         assert triangles_bytes == valid_triangles_bytes
         assert isinstance(triangles_bytes, bytes)
 
 
 class TestDeserialization:
     def test_pointset_from_bytes_must_return_pointset(self):
-        point_set_bytes = None  # TODO : Ecrire a la main la sérialisation pour que ce test soit valide
-        valid_deserialized_point_set = (
-            None  # TODO : Ecrire a la main le PointSet pour que ce test soit valide
+        # Sérialisation manuelle: 2 points (5.0, 7.0) et (3.0, 4.0)
+        # 4 bytes: nombre de points (2)
+        # 8 bytes: point 1 (5.0, 7.0)
+        # 8 bytes: point 2 (3.0, 4.0)
+        point_set_bytes = struct.pack(
+            '<Lffff',
+            2,        # nombre de points (unsigned long)
+            5.0, 7.0, # point 1
+            3.0, 4.0  # point 2
         )
-        deserialized_point_set = PointSet.from_bytes(point_set_bytes)
-        assert isinstance(deserialized_point_set, PointSet)
-        assert deserialized_point_set == valid_deserialized_point_set
+        point_set = PointSet.from_bytes(point_set_bytes)
+        valid_point_set = PointSet([Point(5.0, 7.0), Point(3.0, 4.0)])
+        assert point_set == valid_point_set
+        assert isinstance(point_set, PointSet)
