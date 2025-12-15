@@ -1,0 +1,43 @@
+.coverage
+.DS_Store
+.idea/.gitignore
+.idea/copilot.data.migration.agent.xml
+.idea/copilot.data.migration.ask.xml
+.idea/copilot.data.migration.ask2agent.xml
+.idea/copilot.data.migration.edit.xml
+.idea/dataSources.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/swagger-settings.xml
+.idea/Techniques de test.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+__pycache__/pointset.cpython-313-pytest-8.4.2.pyc
+__pycache__/triangles.cpython-313-pytest-8.4.2.pyc
+__pycache__/Triangulator.cpython-313.pyc
+classes/__pycache__/pointset.cpython-313.pyc
+classes/__pycache__/triangles.cpython-313.pyc
+docs/Triangulator.html
+docs/classes/index.html
+docs/classes/pointset.html
+docs/classes/triangles.html
+docs/Techniques de test/index.html
+docs/Techniques de test/Triangulator.html
+docs/Techniques de test/classes/index.html
+docs/Techniques de test/classes/pointset.html
+docs/Techniques de test/classes/triangles.html
+docs/Techniques de test/tests/index.html
+docs/Techniques de test/tests/test_api.html
+docs/Techniques de test/tests/test_perf.html
+docs/Techniques de test/tests/test_triangulator.html
+docs/Techniques de test/tests/services/index.html
+docs/Techniques de test/tests/services/pointsetService.html
+services/__pycache__/BowerWatsonService.cpython-313.pyc
+tests/__pycache__/test_api.cpython-313-pytest-8.4.2.pyc
+tests/__pycache__/test_api.cpython-313.pyc
+tests/__pycache__/test_perf.cpython-313-pytest-8.4.2.pyc
+tests/__pycache__/test_perf.cpython-313.pyc
+tests/__pycache__/test_sample.cpython-313-pytest-8.4.2.pyc
+tests/__pycache__/test_triangulator.cpython-313-pytest-8.4.2.pyc
+tests/__pycache__/test_triangulator.cpython-313.pyc
+tests/services/__pycache__/pointsetService.cpython-313.pyc
