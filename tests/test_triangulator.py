@@ -33,7 +33,7 @@ class TestTriangulate:
 
     def test_triangulate_with_duplicated_points(self):
         duplicated_point_point_set = PointSet(
-            [Point(1.0, 1.0), Point(1.0, 1.0), Point(2.0, 2.0)]
+            [Point(1.0, 1.0), Point(2.0, 2.0), Point(1.0, 1.0), Point(2.0, 3.0)]
         )
         with pytest.raises(
             ValueError, match="Cannot triangulate a PointSet with duplicated points"
