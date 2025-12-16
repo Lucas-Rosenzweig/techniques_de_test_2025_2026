@@ -149,6 +149,19 @@ el.replaceWith(d);
         from services import BowerWatsonService
         from classes.triangles import Triangles, Triangle
 
+        # On vérifie que le PointSet est valide pour la triangulation
+        if self == PointSet([]):
+            raise ValueError(&#34;Cannot triangulate an empty PointSet&#34;)
+
+        if self.point_count &lt; 3:
+            raise ValueError(&#34;Cannot triangulate a PointSet with less than 3 points&#34;)
+
+        if self.check_colinearity():
+            raise ValueError(&#34;Cannot triangulate a PointSet with only collinear points&#34;)
+
+        if self.check_duplicates():
+            raise ValueError(&#34;Cannot triangulate a PointSet with duplicated points&#34;)
+
         super_triangle = BowerWatsonService.super_triangle(self.points)
         triangulation : list[Triangle] = [super_triangle]
 
@@ -250,6 +263,19 @@ el.replaceWith(d);
 <pre><code class="python">def triangulate(self) -&gt; &#34;Triangles&#34;:
     from services import BowerWatsonService
     from classes.triangles import Triangles, Triangle
+
+    # On vérifie que le PointSet est valide pour la triangulation
+    if self == PointSet([]):
+        raise ValueError(&#34;Cannot triangulate an empty PointSet&#34;)
+
+    if self.point_count &lt; 3:
+        raise ValueError(&#34;Cannot triangulate a PointSet with less than 3 points&#34;)
+
+    if self.check_colinearity():
+        raise ValueError(&#34;Cannot triangulate a PointSet with only collinear points&#34;)
+
+    if self.check_duplicates():
+        raise ValueError(&#34;Cannot triangulate a PointSet with duplicated points&#34;)
 
     super_triangle = BowerWatsonService.super_triangle(self.points)
     triangulation : list[Triangle] = [super_triangle]

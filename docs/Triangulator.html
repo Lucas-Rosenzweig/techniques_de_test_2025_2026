@@ -54,7 +54,41 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">@app.route(&#34;/triangulation/&lt;string:pointSetId&gt;&#34;, methods=[&#34;GET&#34;])
 def triangulation(pointSetId: str):
-    return &#34;OK&#34;, 200</code></pre>
+    # Valide l&#39;id du pointset
+    try:
+        uuid.UUID(pointSetId)
+    except ValueError:
+        return jsonify({&#34;error&#34;: &#34;Invalid UUID&#34;}), 400
+
+    try:
+        # Récupère le pointset depuis le pointset manager en partant du principe que le pointset manager est en localhost:5000
+        url = f&#34;http://localhost:5000/pointset/{pointSetId}&#34;
+        with urllib.request.urlopen(url) as response:
+            if response.getcode() == 200:
+                point_set_bytes = response.read() #Récupère le pointset sous forme de bytes
+                point_set = PointSet.from_bytes(point_set_bytes) #Transforme les bytes en pointset
+                
+                try:
+                    triangles = point_set.triangulate() #Triangule le pointset
+                    return Response(
+                        triangles.to_bytes(), #Transforme les triangles en bytes
+                        mimetype=&#34;application/octet-stream&#34;, #Indique que le contenu est en bytes
+                        status=200
+                    )
+                except ValueError as e:
+                    return jsonify({&#34;error&#34;: str(e)}), 500 #Retourne une erreur si la triangulation echoue
+            else:
+                 # Retourne une erreur si le pointset n&#39;est pas trouvé
+                return jsonify({&#34;error&#34;: &#34;Failed to retrieve PointSet&#34;}), response.getcode()
+
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return jsonify({&#34;error&#34;: &#34;PointSet not found&#34;}), 404
+        return jsonify({&#34;error&#34;: str(e)}), 500
+    except (urllib.error.URLError, ConnectionError):
+        return jsonify({&#34;error&#34;: &#34;Service unavailable&#34;}), 500
+    except Exception as e:
+         return jsonify({&#34;error&#34;: str(e)}), 500</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
