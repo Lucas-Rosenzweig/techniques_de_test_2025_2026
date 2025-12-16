@@ -64,4 +64,4 @@ docs/
 dmypy.json
 
 # Ruff
-.ruff_cache/
+.ruff_cache/ez
