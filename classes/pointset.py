@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 import math
+import struct
 
 if TYPE_CHECKING:  # Avoid circular import issues
     from triangles import Triangles, Triangle
@@ -71,6 +72,19 @@ class PointSet:
     def triangulate(self) -> "Triangles":
         from services import BowerWatsonService
         from classes.triangles import Triangles, Triangle
+
+        # On vérifie que le PointSet est valide pour la triangulation
+        if self == PointSet([]):
+            raise ValueError("Cannot triangulate an empty PointSet")
+
+        if self.point_count < 3:
+            raise ValueError("Cannot triangulate a PointSet with less than 3 points")
+
+        if self.check_colinearity():
+            raise ValueError("Cannot triangulate a PointSet with only collinear points")
+
+        if self.check_duplicates():
+            raise ValueError("Cannot triangulate a PointSet with duplicated points")
 
         super_triangle = BowerWatsonService.super_triangle(self.points)
         triangulation : list[Triangle] = [super_triangle]
