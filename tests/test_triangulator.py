@@ -1,5 +1,7 @@
-# Unit test for the triangulator module
+"""Unit tests for the triangulator module."""
+
 import struct
+
 import pytest
 
 from classes.pointset import Point, PointSet
@@ -7,17 +9,22 @@ from classes.triangles import Triangles
 
 
 class TestTriangulate:
+    """Test suite for the triangulation functionality."""
+
     def test_triangulate_must_return_triangles(self):
+        """Test that triangulate returns a Triangles object."""
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         triangulation = point_set.triangulate()
         assert isinstance(triangulation, Triangles)
 
     def test_triangulate_must_return_valid_triangle(self):
+        """Test that triangulate returns the correct number of triangles."""
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         triangulation = point_set.triangulate()
         assert triangulation.triangle_count == 1
 
     def test_triangulate_with_only_collinear_points(self):
+        """Test that triangulate raises ValueError for collinear points."""
         collinear_point_set = PointSet(
             [Point(1.0, 1.0), Point(2.0, 2.0), Point(3.0, 3.0)]
         )
@@ -27,11 +34,13 @@ class TestTriangulate:
             collinear_point_set.triangulate()
 
     def test_triangulate_with_void_point_set(self):
+        """Test that triangulate raises ValueError for empty PointSet."""
         void_point_set = PointSet([])
         with pytest.raises(ValueError, match="Cannot triangulate an empty PointSet"):
             void_point_set.triangulate()
 
     def test_triangulate_with_duplicated_points(self):
+        """Test that triangulate raises ValueError for duplicated points."""
         duplicated_point_point_set = PointSet(
             [Point(1.0, 1.0), Point(2.0, 2.0), Point(1.0, 1.0), Point(2.0, 3.0)]
         )
@@ -41,6 +50,7 @@ class TestTriangulate:
             duplicated_point_point_set.triangulate()
 
     def test_triangulate_with_one_point(self):
+        """Test that triangulate raises ValueError for single point."""
         point_set = PointSet([Point(1.0, 1.0)])
         with pytest.raises(
             ValueError, match="Cannot triangulate a PointSet with less than 3 points"
@@ -48,6 +58,7 @@ class TestTriangulate:
             point_set.triangulate()
 
     def test_triangulate_with_two_points(self):
+        """Test that triangulate raises ValueError for two points."""
         point_set = PointSet([Point(1.0, 1.0), Point(2.0, 2.0)])
         with pytest.raises(
             ValueError, match="Cannot triangulate a PointSet with less than 3 points"
@@ -55,6 +66,7 @@ class TestTriangulate:
             point_set.triangulate()
 
     def test_triangulate_with_square_points(self):
+        """Test triangulation of a square (4 points)."""
         point_set = PointSet(
             [Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)]
         )
@@ -63,47 +75,64 @@ class TestTriangulate:
 
 
 class TestSerialization:
+    """Test suite for serialization functionality."""
+
     def test_pointset_to_bytes_must_return_bytes(self):
+        """Test that PointSet.to_bytes returns correct bytes."""
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         point_set_bytes = point_set.to_bytes()
         valid_point_set_bytes = struct.pack(
-            '<Lffffff',  # L = unsigned long, f = float (little-endian)
-            3,           # nombre de points
-            0.0, 0.0,    # point 1 (x, y)
-            1.0, 0.0,    # point 2 (x, y)
-            1.0, 1.0     # point 3 (x, y)
+            "<Lffffff",  # L = unsigned long, f = float (little-endian)
+            3,  # nombre de points
+            0.0,
+            0.0,  # point 1 (x, y)
+            1.0,
+            0.0,  # point 2 (x, y)
+            1.0,
+            1.0,  # point 3 (x, y)
         )
         assert point_set_bytes == valid_point_set_bytes
         assert isinstance(point_set_bytes, bytes)
 
     def test_triangles_to_bytes_must_return_bytes(self):
+        """Test that Triangles.to_bytes returns correct bytes."""
         point_set = PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
         triangles = point_set.triangulate()
         triangles_bytes = triangles.to_bytes()
         valid_triangles_bytes = struct.pack(
-            '<LffffffLLLL',
-            3,        # nombre de points (unsigned long)
-            0.0, 0.0, # point 1
-            1.0, 0.0, # point 2
-            1.0, 1.0, # point 3
-            1,        # nombre de triangles (unsigned long)
-            0, 1, 2   # indices des 3 sommets du triangle (unsigned long chacun)
+            "<LffffffLLLL",
+            3,  # nombre de points (unsigned long)
+            0.0,
+            0.0,  # point 1
+            1.0,
+            0.0,  # point 2
+            1.0,
+            1.0,  # point 3
+            1,  # nombre de triangles (unsigned long)
+            0,
+            1,
+            2,  # indices des 3 sommets du triangle (unsigned long chacun)
         )
         assert triangles_bytes == valid_triangles_bytes
         assert isinstance(triangles_bytes, bytes)
 
 
 class TestDeserialization:
+    """Test suite for deserialization functionality."""
+
     def test_pointset_from_bytes_must_return_pointset(self):
+        """Test that PointSet.from_bytes returns correct PointSet."""
         # Sérialisation manuelle: 2 points (5.0, 7.0) et (3.0, 4.0)
         # 4 bytes: nombre de points (2)
         # 8 bytes: point 1 (5.0, 7.0)
         # 8 bytes: point 2 (3.0, 4.0)
         point_set_bytes = struct.pack(
-            '<Lffff',
-            2,        # nombre de points (unsigned long)
-            5.0, 7.0, # point 1
-            3.0, 4.0  # point 2
+            "<Lffff",
+            2,  # nombre de points (unsigned long)
+            5.0,
+            7.0,  # point 1
+            3.0,
+            4.0,  # point 2
         )
         point_set = PointSet.from_bytes(point_set_bytes)
         valid_point_set = PointSet([Point(5.0, 7.0), Point(3.0, 4.0)])

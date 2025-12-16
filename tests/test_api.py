@@ -1,4 +1,5 @@
-# Unit test for the triangulator api
+"""Unit tests for the triangulator api."""
+
 from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 
@@ -10,6 +11,7 @@ from Triangulator import app as flask_app
 
 # Helper pour avoir un PointSetValide
 def get_valid_pointset() -> PointSet:
+    """Return a valid PointSet for testing."""
     return PointSet([Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)])
 
 
@@ -18,14 +20,18 @@ URLOPEN_PATH = "urllib.request.urlopen"
 
 
 class TestTriangulatorApi:
+    """Test suite for the Triangulator API."""
+
     # Fixture for flask client
     @pytest.fixture
     def client(self):
+        """Fixture to provide a Flask test client."""
         flask_app.config["TESTING"] = True
         with flask_app.test_client() as client:
             yield client
 
     def test_api_200_triangulation_ok(self, client):
+        """Test a successful triangulation request (200 OK)."""
         # Préparation des données du mock :
         valid_point_set = get_valid_pointset()
         valid_point_set_bytes = valid_point_set.to_bytes()
@@ -35,7 +41,9 @@ class TestTriangulatorApi:
         mock_response = Mock()
         mock_response.read.return_value = valid_point_set_bytes
         mock_response.getcode.return_value = 200
-        mock_response.status = 200  # Sécurité dans le cas ou getcode n'est pas utilisé dans ma future implémentation
+        # Sécurité dans le cas ou getcode n'est pas utilisé
+        # dans ma future implémentation
+        mock_response.status = 200
         mock_response.__enter__ = Mock(return_value=mock_response)
         mock_response.__exit__ = Mock(return_value=False)
 
@@ -46,12 +54,14 @@ class TestTriangulatorApi:
             assert response.data == expected_triangles.to_bytes()
 
     def test_api_400_invalid_pointset_id(self, client):
+        """Test request with invalid UUID (400 Bad Request)."""
         invalid_id = "NotAValidUUID"
         response = client.get(f"/triangulation/{invalid_id}")
         assert response.status_code == 400
         assert response.content_type == "application/json"
 
     def test_api_404_pointset_not_found(self, client):
+        """Test request for non-existent PointSet (404 Not Found)."""
         valid_uuid = "123e4567-e89b-12d3-a456-426614174000"
 
         # Mock du call API qui retourne une erreur 404
@@ -69,6 +79,7 @@ class TestTriangulatorApi:
             assert response.content_type == "application/json"
 
     def test_api_500_triangulation_algorithm_error(self, client):
+        """Test error during triangulation (500 Internal Server Error)."""
         valid_uuid = "123e4567-e89b-12d3-a456-426614174000"
         valid_point_set = get_valid_pointset()
         valid_point_set_bytes = valid_point_set.to_bytes()
@@ -81,16 +92,19 @@ class TestTriangulatorApi:
         mock_response.__enter__ = Mock(return_value=mock_response)
         mock_response.__exit__ = Mock(return_value=False)
 
-        with patch(URLOPEN_PATH, return_value=mock_response):
-            # Mock de la méthode triangulate pour simuler une erreur interne
-            with patch.object(
+        # Mock de la méthode triangulate pour simuler une erreur interne
+        with (
+            patch(URLOPEN_PATH, return_value=mock_response),
+            patch.object(
                 PointSet, "triangulate", side_effect=ValueError("Triangulation error")
-            ):
-                response = client.get(f"/triangulation/{valid_uuid}")
-                assert response.status_code == 500
-                assert response.content_type == "application/json"
+            ),
+        ):
+            response = client.get(f"/triangulation/{valid_uuid}")
+            assert response.status_code == 500
+            assert response.content_type == "application/json"
 
     def test_api_503_manager_communication_error(self, client):
+        """Test error communicating with PointSetManager (500/503)."""
         valid_uuid = "123e4567-e89b-12d3-a456-426614174000"
 
         # Mock du call API qui lève une exception réseau (timeout, connection error)

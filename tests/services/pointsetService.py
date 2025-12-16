@@ -1,9 +1,25 @@
+"""Service for generating PointSets for testing purposes."""
+
 import random
 
 from classes.pointset import Point, PointSet
 
 
 def generate_pointset(size, amplitude, distribution) -> PointSet:
+    """Generate a PointSet with specific characteristics.
+
+    Args:
+        size (int): Number of points.
+        amplitude (tuple): Range (min, max) for coordinates.
+        distribution (str): 'uniform', 'linear', or 'clustered'.
+
+    Returns:
+        PointSet: The generated point set.
+
+    Raises:
+        ValueError: If distribution is unknown.
+
+    """
     min_val, max_val = amplitude
     points = []
 
@@ -17,7 +33,8 @@ def generate_pointset(size, amplitude, distribution) -> PointSet:
                 for _ in range(size)
             ]
         case "linear":
-            # Génère des points de manière linéaire entre min_val et max_val avec y = ax + b + un peu de bruit
+            # Génère des points de manière linéaire entre min_val et max_val
+            # avec y = ax + b + un peu de bruit
             points = [
                 Point(x, x * 1.5 + random.uniform(-1, 1))
                 for x in [random.uniform(min_val, max_val) for _ in range(size)]
@@ -30,7 +47,8 @@ def generate_pointset(size, amplitude, distribution) -> PointSet:
             ]
             for _ in range(size):
                 cx, cy = random.choice(centers)
-                # Ajout d'un offset au hasard autour du centre choisi pour créer un cluster
+                # Ajout d'un offset au hasard autour du centre choisi
+                # pour créer un cluster
                 points.append(
                     Point(
                         cx + random.gauss(0, (max_val - min_val) / 20),

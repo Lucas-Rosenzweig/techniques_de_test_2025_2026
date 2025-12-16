@@ -12,6 +12,7 @@ select = [
     "SIM",
     "I",
 ]
+ignore = ["D203", "D213"]
 
 [tool.coverage.run]
 source = ["."]

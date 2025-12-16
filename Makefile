@@ -24,4 +24,4 @@ lint:
 doc:
 	@echo "Génération de la documentation avec pdoc3"
 #	On genère la doc uniquement pour les fichiers python principaux
-	pdoc3 --html --output-dir docs --force src
+	PYTHONPATH=src pdoc3 --html --output-dir docs --force src
