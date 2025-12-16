@@ -102,9 +102,6 @@ class PointSet:
             bool: True if all points are collinear, False otherwise.
 
         """
-        if self.point_count < 3:
-            return False  # Moins de 3 points ne peuvent pas être colinéaires
-
         p1 = self.points[0]
         p2 = self.points[1]
 

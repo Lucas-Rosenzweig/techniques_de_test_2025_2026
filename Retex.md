@@ -8,6 +8,7 @@ Le fait d'avoir un cahier des charges détaillé dès le départ m'a permis d'é
 ## Ce que je ferais autrement (Points d'amélioration)
 Le point faible concerne les tests de performance. Bien qu'utiles pour mesurer l'exécution, ils passent systématiquement sans vérifier si le temps de traitement est acceptable.
 Avec le recul, je définirais des critères d'acceptation précis dès le départ (ex: "un traitement doit prendre moins de 50ms pour X points") pour que ces tests puissent échouer en cas de régression. Je me suis aussi rendu compte trop tard que j'avais oublié d'implémenter certains tests de performance prévus initialement dans mon plan.
+Un autre point faible est l'absence de tests de "résultat quelconque", c'est-à-dire l'ajout de tests unitaires où l'on triangule des PointSets quelconques (qui ne représentent pas des edge cases) dont nous connaissons le résultat, afin de tester le code.
 
 ## Évaluation du plan initial
 Je trouve mon plan initial assez bon. Je n'ai pas eu besoin de retoucher mes tests, ce qui m'a permis d'avancer sereinement dans l'implémentation.

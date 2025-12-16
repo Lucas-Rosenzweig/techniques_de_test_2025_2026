@@ -37,12 +37,6 @@ class Triangle:
         cx, cy = self.p3.x, self.p3.y
         d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
 
-        # Cas de points colinéaires pas de cercle circonscrit défini
-        if abs(d) < 1e-10:
-            self.circumcenter = Point(float("inf"), float("inf"))
-            self.circumradius = float("inf")
-            return
-
         # Calcul des coordonnées du centre du cercle circonscrit
         # avec la formule du déterminant
         ux = (
@@ -113,16 +107,6 @@ class Triangles:
         self.pointset = pointset
         self.triangles = triangles
         self.triangle_count = len(triangles)
-
-    # Overriding equality operator for testing purposes
-    def __eq__(self, other) -> bool:
-        """Check equality with another object."""
-        return (
-            isinstance(other, Triangles)
-            and self.pointset == other.pointset
-            and self.triangle_count == other.triangle_count
-            and self.triangles == other.triangles
-        )
 
     def to_bytes(self) -> bytes:
         """Serialize Triangles to bytes.
