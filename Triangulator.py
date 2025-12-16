@@ -1,11 +1,49 @@
-from flask import Flask
+import uuid
+import urllib.request
+import urllib.error
+from flask import Flask, jsonify, Response
+from classes.pointset import PointSet
 
 app = Flask(__name__)
 
 
 @app.route("/triangulation/<string:pointSetId>", methods=["GET"])
 def triangulation(pointSetId: str):
-    return "OK", 200
+    # Valide l'id du pointset
+    try:
+        uuid.UUID(pointSetId)
+    except ValueError:
+        return jsonify({"error": "Invalid UUID"}), 400
+
+    try:
+        # Récupère le pointset depuis le pointset manager en partant du principe que le pointset manager est en localhost:5000
+        url = f"http://localhost:5000/pointset/{pointSetId}"
+        with urllib.request.urlopen(url) as response:
+            if response.getcode() == 200:
+                point_set_bytes = response.read() #Récupère le pointset sous forme de bytes
+                point_set = PointSet.from_bytes(point_set_bytes) #Transforme les bytes en pointset
+                
+                try:
+                    triangles = point_set.triangulate() #Triangule le pointset
+                    return Response(
+                        triangles.to_bytes(), #Transforme les triangles en bytes
+                        mimetype="application/octet-stream", #Indique que le contenu est en bytes
+                        status=200
+                    )
+                except ValueError as e:
+                    return jsonify({"error": str(e)}), 500 #Retourne une erreur si la triangulation echoue
+            else:
+                 # Retourne une erreur si le pointset n'est pas trouvé
+                return jsonify({"error": "Failed to retrieve PointSet"}), response.getcode()
+
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return jsonify({"error": "PointSet not found"}), 404
+        return jsonify({"error": str(e)}), 500
+    except (urllib.error.URLError, ConnectionError):
+        return jsonify({"error": "Service unavailable"}), 500
+    except Exception as e:
+         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
