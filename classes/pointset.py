@@ -27,12 +27,46 @@ class PointSet:
 
     @classmethod
     def from_bytes(cls, data: bytes) -> "PointSet":
-        # Placeholder pour la méthode qui vas convertir nos bytes en PointSet
-        pass
+        offset = 0
+        (point_count,) = struct.unpack_from('<L', data, offset)
+        offset += 4
+        points = []
+        for _ in range(point_count):
+            x, y = struct.unpack_from('<ff', data, offset)
+            points.append(Point(x, y))
+            offset += 8
+        return cls(points)
 
     def to_bytes(self) -> bytes:
-        # Placeholder pour la méthode qui vas convertir notre PointSet en bytes
-        pass
+        data = bytearray()
+        data.extend(struct.pack('<L', self.point_count))
+        for point in self.points:
+            data.extend(struct.pack('<ff', point.x, point.y))
+        return bytes(data)
+
+    #Fonction qui vérifie si tous les points sont colinéaires
+    def check_colinearity(self) -> bool:
+        if self.point_count < 3:
+            return False  # Moins de 3 points ne peuvent pas être colinéaires
+
+        p1 = self.points[0]
+        p2 = self.points[1]
+
+        for i in range(2, self.point_count):
+            p = self.points[i]
+            # Calcul du déterminant pour vérifier la colinéarité
+            if (p2.x - p1.x) * (p.y - p1.y) != (p.x - p1.x) * (p2.y - p1.y):
+                return False  # Trouvé un point non colinéaire
+
+        return True  # Tous les points sont colinéaires
+
+    def check_duplicates(self) -> bool:
+        seen = set()
+        for point in self.points:
+            if point in seen:
+                return True
+            seen.add(point)
+        return False
 
     def triangulate(self) -> "Triangles":
         from services import BowerWatsonService

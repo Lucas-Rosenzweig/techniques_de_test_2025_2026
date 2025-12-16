@@ -1,4 +1,5 @@
 from classes.pointset import Point, PointSet
+import struct
 
 
 class Triangle:
@@ -77,7 +78,13 @@ class Triangles:
         )
 
     def to_bytes(self) -> bytes:
-        # Placeholder pour la méthode qui vas convertir notre Triangles en bytes
-        # Lors de la sérialisation, on convertira les Triangle (Points) en indices
-        # en cherchant chaque point dans self.pointset.points
-        pass
+        data = bytearray(self.pointset.to_bytes())
+        data.extend(struct.pack('<L', self.triangle_count))
+        for triangle in self.triangles:
+            idx1 = self.pointset.points.index(triangle.p1)
+            idx2 = self.pointset.points.index(triangle.p2)
+            idx3 = self.pointset.points.index(triangle.p3)
+            indices = sorted([idx1, idx2, idx3])
+            data.extend(struct.pack('<LLL', *indices))
+        return bytes(data)
+
